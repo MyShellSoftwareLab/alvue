@@ -1,0 +1,22 @@
+{
+  "name": "@myshell/alvue",
+  "version": "0.0.6",
+  "main": "src/alv.js",
+  "browser": {
+    "./sfc": "src/my-component.vue"
+  },
+  "description": "Ajax Laravel Validator",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MyShellSoftwareLab/alvue.git"
+  },
+  "author": "GussRw",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MyShellSoftwareLab/alvue/issues"
+  },
+  "homepage": "https://github.com/MyShellSoftwareLab/alvue#readme"
+}
