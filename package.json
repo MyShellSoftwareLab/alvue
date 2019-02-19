@@ -1,9 +1,9 @@
 {
   "name": "@myshell/alvue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "src/alv.js",
   "browser": {
-    "./sfc": "src/my-component.vue"
+    "./sfc": "src/alv-form.vue"
   },
   "description": "Ajax Laravel Validator",
   "scripts": {
@@ -18,8 +18,5 @@
   "bugs": {
     "url": "https://github.com/MyShellSoftwareLab/alvue/issues"
   },
-  "homepage": "https://github.com/MyShellSoftwareLab/alvue#readme",
-  "dependencies": {
-    "user": "0.0.0"
-  }
+  "homepage": "https://github.com/MyShellSoftwareLab/alvue#readme"
 }

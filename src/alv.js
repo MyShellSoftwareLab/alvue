@@ -1,14 +1,7 @@
-import ALVComponent from './alv-form';
+import AlvForm from './alv-form';
 
-const alv = {
-    install(Vue, options) {
-        Vue.component('alv-form', ALVComponent);
-        Vue.mixin({
-            mounted() {
-                console.log('ALV is running!!!!');
-            }
-        });
+export default {
+    install(Vue) {
+        Vue.component('alv-form', AlvForm);
     }
 };
-
-export default  alv;
