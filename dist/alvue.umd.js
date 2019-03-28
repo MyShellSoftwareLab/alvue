@@ -991,6 +991,40 @@ module.exports = function (it) {
 
 /***/ }),
 
+/***/ "3f02":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// 20.3.4.36 / 15.9.5.43 Date.prototype.toISOString()
+var fails = __webpack_require__("8ed0");
+var getTime = Date.prototype.getTime;
+var $toISOString = Date.prototype.toISOString;
+
+var lz = function (num) {
+  return num > 9 ? num : '0' + num;
+};
+
+// PhantomJS / old WebKit has a broken implementations
+module.exports = (fails(function () {
+  return $toISOString.call(new Date(-5e13 - 1)) != '0385-07-25T07:06:39.999Z';
+}) || !fails(function () {
+  $toISOString.call(new Date(NaN));
+})) ? function toISOString() {
+  if (!isFinite(getTime.call(this))) throw RangeError('Invalid time value');
+  var d = this;
+  var y = d.getUTCFullYear();
+  var m = d.getUTCMilliseconds();
+  var s = y < 0 ? '-' : y > 9999 ? '+' : '';
+  return s + ('00000' + Math.abs(y)).slice(s ? -6 : -4) +
+    '-' + lz(d.getUTCMonth() + 1) + '-' + lz(d.getUTCDate()) +
+    'T' + lz(d.getUTCHours()) + ':' + lz(d.getUTCMinutes()) +
+    ':' + lz(d.getUTCSeconds()) + '.' + (m > 99 ? m : '0' + lz(m)) + 'Z';
+} : $toISOString;
+
+
+/***/ }),
+
 /***/ "4044":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1874,6 +1908,21 @@ exports.f = __webpack_require__("4137") ? Object.defineProperty : function defin
 
 /***/ }),
 
+/***/ "a872":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 20.3.4.36 / 15.9.5.43 Date.prototype.toISOString()
+var $export = __webpack_require__("14ae");
+var toISOString = __webpack_require__("3f02");
+
+// PhantomJS / old WebKit has a broken implementations
+$export($export.P + $export.F * (Date.prototype.toISOString !== toISOString), 'Date', {
+  toISOString: toISOString
+});
+
+
+/***/ }),
+
 /***/ "ab8c":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2143,6 +2192,15 @@ module.exports = function (original) {
 
 /***/ }),
 
+/***/ "cc24":
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__("fd69");
+module.exports = __webpack_require__("2c8a").Array.isArray;
+
+
+/***/ }),
+
 /***/ "cc95":
 /***/ (function(module, exports) {
 
@@ -2316,6 +2374,13 @@ $export($export.P + $export.F * !STRICT, 'Array', {
   }
 });
 
+
+/***/ }),
+
+/***/ "dbb2":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__("cc24");
 
 /***/ }),
 
@@ -2710,12 +2775,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"639a2f3f-vue-loader-template"}!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./src/alv-form.vue?vue&type=template&id=a26dba1a&scoped=true&
+// CONCATENATED MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"9fda6d30-vue-loader-template"}!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./src/alv-form.vue?vue&type=template&id=9a816b02&scoped=true&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{ref:"form",attrs:{"action":_vm.action,"method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.sendFormData($event)}}},[_c('input',{attrs:{"type":"hidden","name":"_method"},domProps:{"value":_vm.method}}),_c('input',{attrs:{"type":"hidden","name":"csrf"},domProps:{"value":_vm.token}}),_vm._t("default")],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/alv-form.vue?vue&type=template&id=a26dba1a&scoped=true&
+// CONCATENATED MODULE: ./src/alv-form.vue?vue&type=template&id=9a816b02&scoped=true&
+
+// EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es6.function.name.js
+var es6_function_name = __webpack_require__("ed5d");
 
 // EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es7.array.includes.js
 var es7_array_includes = __webpack_require__("18f4");
@@ -2723,11 +2791,9 @@ var es7_array_includes = __webpack_require__("18f4");
 // EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es6.string.includes.js
 var es6_string_includes = __webpack_require__("3c80");
 
-// EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/web.dom.iterable.js
-var web_dom_iterable = __webpack_require__("0b5b");
-
-// EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es6.array.for-each.js
-var es6_array_for_each = __webpack_require__("da1f");
+// EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/@babel/runtime-corejs2/core-js/array/is-array.js
+var is_array = __webpack_require__("dbb2");
+var is_array_default = /*#__PURE__*/__webpack_require__.n(is_array);
 
 // EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/@babel/runtime-corejs2/core-js/symbol/iterator.js
 var iterator = __webpack_require__("306e");
@@ -2756,14 +2822,22 @@ function typeof_typeof(obj) {
 
   return typeof_typeof(obj);
 }
-// EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es6.function.name.js
-var es6_function_name = __webpack_require__("ed5d");
+// EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es6.date.to-iso-string.js
+var es6_date_to_iso_string = __webpack_require__("a872");
+
+// EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/web.dom.iterable.js
+var web_dom_iterable = __webpack_require__("0b5b");
+
+// EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/core-js/modules/es6.array.for-each.js
+var es6_array_for_each = __webpack_require__("da1f");
 
 // EXTERNAL MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/@babel/runtime-corejs2/core-js/object/keys.js
 var keys = __webpack_require__("91d8");
 var keys_default = /*#__PURE__*/__webpack_require__.n(keys);
 
 // CONCATENATED MODULE: /home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/thread-loader/dist/cjs.js!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/babel-loader/lib??ref--12-1!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/cache-loader/dist/cjs.js??ref--0-0!/home/guss/.node_modules/lib/node_modules/@vue/cli-service-global/node_modules/vue-loader/lib??vue-loader-options!./src/alv-form.vue?vue&type=script&lang=js&
+
+
 
 
 
@@ -2823,24 +2897,52 @@ var keys_default = /*#__PURE__*/__webpack_require__.n(keys);
       return formData;
     },
     getFormObject: function getFormObject() {
+      var _this = this;
+
       var form = this.dataObject;
       var formData = this.createFormData();
 
-      var _loop = function _loop(name) {
-        if (form[name] instanceof FileList) for (var i = 0; i < form[name].length; i++) {
-          formData.append(name, form[name][i]);
-        } else if (form[name] && typeof_typeof(form[name]) == "object") keys_default()(form[name]).forEach(function (objectName) {
-          if (form[name][objectName] && typeof_typeof(form[name][objectName]) == "object") keys_default()(form[name][objectName]).forEach(function (objectObjectName) {
-            formData.append("".concat(name, "[").concat(objectName, "][").concat(objectObjectName, "]"), form[name][objectName][objectObjectName]);
-          });else formData.append("".concat(name, "[").concat(objectName, "]"), form[name][objectName]);
-        });else formData.append(name, form[name]);
-      };
-
-      for (var name in form) {
-        _loop(name);
-      }
+      keys_default()(form).forEach(function (key) {
+        formData = _this.append(formData, form, '', key);
+      });
 
       return formData;
+    },
+    append: function append(formData, form, name, key) {
+      var _this2 = this;
+
+      if (form[key] instanceof Date) {
+        formData.append(name ? name : key, form[key].toISOString());
+        return formData;
+      } else if (form[key] instanceof FileList) {
+        if (key.slice(-2) !== "[]") {
+          formData.append(name ? name : key, form[key][0]);
+          return formData;
+        } else {
+          for (var i = 0; i < form[key].length; i++) {
+            formData.append(name ? "".concat(name, "[]") : key, form[key][i]);
+          }
+
+          return formData;
+        }
+      } else if (form[key] && typeof_typeof(form[key]) == "object") {
+        if (is_array_default()(form[key])) {
+          form[key].forEach(function (item, index) {
+            formData = _this2.append(formData, form[key], name ? "".concat(name, "[").concat(index, "]") : "".concat(key, "[").concat(index, "]"), index);
+          });
+          return formData;
+        } else {
+          keys_default()(form[key]).forEach(function (index) {
+            var cleanIndex = index.slice(-2) === "[]" ? index.substring(0, index.length - 2) : index;
+            formData = _this2.append(formData, form[key], name ? "".concat(name, "[").concat(cleanIndex, "]") : "".concat(key, "[").concat(cleanIndex, "]"), index);
+          });
+
+          return formData;
+        }
+      } else {
+        formData.append(name ? name : key, form[key]);
+        return formData;
+      }
     },
     createFormData: function createFormData() {
       var formData = new FormData();
@@ -2886,7 +2988,7 @@ var keys_default = /*#__PURE__*/__webpack_require__.n(keys);
       return span;
     },
     getInputFormsNames: function getInputFormsNames() {
-      var inputForms = this.$refs.form.querySelectorAll(this.parentSelector + ' > [name]');
+      var inputForms = this.$refs.form.querySelectorAll(this.parentSelector + ' [name]');
       var names = [];
       inputForms.forEach(function (inputForm) {
         names.push(inputForm.getAttribute('name'));
@@ -3011,7 +3113,7 @@ var component = normalizeComponent(
   staticRenderFns,
   false,
   null,
-  "a26dba1a",
+  "9a816b02",
   null
   
 )
@@ -3029,6 +3131,17 @@ var component = normalizeComponent(
 
 /* harmony default export */ var entry_lib = __webpack_exports__["default"] = (alv);
 
+
+
+/***/ }),
+
+/***/ "fd69":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 22.1.2.2 / 15.4.3.2 Array.isArray(arg)
+var $export = __webpack_require__("415c");
+
+$export($export.S, 'Array', { isArray: __webpack_require__("791e") });
 
 
 /***/ })
