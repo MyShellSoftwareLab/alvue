@@ -60,24 +60,44 @@
             },
             getFormObject() {
                 let form = this.dataObject;
-                let formData = this.createFormData();
-                for (let name in form)
-                    if (form[name] instanceof FileList)
-                        for (let i = 0; i < form[name].length; i++)
-                            formData.append(name, form[name][i])
-                    else if (form[name] && typeof form[name] == "object")
-                        Object.keys(form[name]).forEach(objectName => {
-                            if (form[name][objectName] && typeof form[name][objectName] == "object")
-                                Object.keys(form[name][objectName]).forEach(objectObjectName => {
-                                    formData.append(`${name}[${objectName}][${objectObjectName}]`, form[name][objectName][objectObjectName]);
-                                });
-                            else
-                                formData.append(`${name}[${objectName}]`, form[name][objectName]);
-                        });
-                    else
-                        formData.append(name, form[name]);
+                var formData = this.createFormData();
+                Object.keys(form).forEach(key => {
+                    formData = this.append(formData, form, '', key)
+                });
 
                 return formData;
+            },
+            append(formData, form, name, key) {
+
+                if (form[key] instanceof Date) {
+                    formData.append(name ? name : key, form[key].toISOString());
+                    return formData;
+                }else if (form[key] instanceof FileList) {
+                    if (key.slice(-2) !== "[]") {
+                        formData.append(name ? name : key, form[key][0]);
+                        return formData;
+                    } else {
+                        for (let i = 0; i < form[key].length; i++)
+                            formData.append(name ? `${name}[]` : key, form[key][i]);
+                        return formData;
+                    }
+                } else if (form[key] && typeof form[key] == "object") {
+                    if (Array.isArray(form[key])) {
+                        form[key].forEach((item, index) => {
+                            formData = this.append(formData, form[key], name ? `${name}[${index}]` : `${key}[${index}]`, index)
+                        });
+                        return formData
+                    } else {
+                        Object.keys(form[key]).forEach(index => {
+                            let cleanIndex = index.slice(-2) === "[]" ? index.substring(0, index.length - 2) : index;
+                            formData = this.append(formData, form[key], name ? `${name}[${cleanIndex}]` : `${key}[${cleanIndex}]`, index)
+                        });
+                        return formData;
+                    }
+                } else {
+                    formData.append(name ? name : key, form[key]);
+                    return formData;
+                }
             },
             createFormData() {
                 let formData = new FormData();
@@ -122,7 +142,7 @@
                 return span;
             },
             getInputFormsNames() {
-                let inputForms = this.$refs.form.querySelectorAll(this.parentSelector + ' > [name]')
+                let inputForms = this.$refs.form.querySelectorAll(this.parentSelector + ' [name]')
                 let names = []
                 inputForms.forEach(function (inputForm) {
                     names.push(inputForm.getAttribute('name'));
