@@ -18,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/MyShellSoftwareLab/alvue/issues"
   },
-  "homepage": "https://github.com/MyShellSoftwareLab/alvue#readme"
+  "homepage": "https://github.com/MyShellSoftwareLab/alvue#readme",
+  "keywords": [
+    "plugin",
+    "laravel",
+    "vue",
+    "vuejs"
+  ]
 }
