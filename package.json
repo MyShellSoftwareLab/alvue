@@ -1,11 +1,11 @@
 {
   "name": "@myshell/alvue",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "main": "src/alv.js",
   "browser": {
     "./sfc": "src/alv-form.vue"
   },
-  "description": "Ajax Laravel Validator",
+  "description": "Ajax Laravel Validator helps you show the errors of a Laravel FormRequest in its forms.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

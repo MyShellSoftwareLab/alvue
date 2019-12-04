@@ -1,29 +1,36 @@
 <template>
-    <form v-bind:action="action" method="post" @submit.prevent="sendFormData" ref="form">
+    <form v-bind:action="action" :method="method" @submit.prevent="sendFormData" ref="form">
         <input type="hidden" name="_method" :value="method">
-        <input type="hidden" name="csrf" :value="token">
         <slot></slot>
+
     </form>
 </template>
 
 <script>
+    import LoadingSpinner from './lading-spinner'
+
     export default {
         name: "alv-form",
-        data() {
-            return {
-                token: ''
-            }
+        components: {
+            LoadingSpinner
         },
         props: {
             action: String,
-            method: String,
+            method: {
+                type: String,
+                default: "post"
+            },
             resetOnDone: Boolean,
             dataObject: Object,
             dataArray: Object,
-            inputParentSelector: String
-        },
-        mounted() {
-            this.token = document.querySelector('[name="csrf-token"]').getAttribute('content');
+            inputParentSelector: {
+                type: String,
+                default: 'div'
+            },
+            spinner: {
+                type: Boolean,
+                default: false
+            }
         },
         methods: {
             sendFormData() {
@@ -36,7 +43,7 @@
                     formData = this.getFormArray();
                 else
                     formData = this.getFormNames(form);
-
+                this.setButtonLoading();
                 axios.post(this.action, formData)
                     .then(response => {
                         $this.$emit('after-done', response);
@@ -44,9 +51,10 @@
                             form.reset();
                         $this.dropAllErrors();
                     }).catch(exception => {
+                    this.unsetButtonLoading()
                     let errors = exception.response.data.errors;
                     $this.showErrors(form, errors);
-                    $this.$emit('after-error');
+                    $this.$emit('after-error', exception.response.data);
                 });
             },
             getFormNames(form) {
@@ -72,7 +80,7 @@
                 if (form[key] instanceof Date) {
                     formData.append(name ? name : key, form[key].toISOString());
                     return formData;
-                }else if (form[key] instanceof FileList) {
+                } else if (form[key] instanceof FileList) {
                     if (key.slice(-2) !== "[]") {
                         formData.append(name ? name : key, form[key][0]);
                         return formData;
@@ -95,14 +103,14 @@
                         return formData;
                     }
                 } else {
-                    formData.append(name ? name : key, form[key]);
+                    if (form[key] != null)
+                        formData.append(name ? name : key, form[key]);
                     return formData;
                 }
             },
             createFormData() {
                 let formData = new FormData();
                 formData.append("_method", this.method);
-                formData.append("_token", this.token);
                 return formData;
             },
 
@@ -111,7 +119,7 @@
                 let name_errors = Object.keys(errors);
                 this.getInputFormsNames().forEach(function (name) {
                     let selector = "[name='" + name + "']";
-                    let formGroup = form.querySelector(selector).closest($this.parentSelector);
+                    let formGroup = form.querySelector(selector).closest($this.inputParentSelector);
                     let current_error = formGroup.getElementsByClassName('alv-error');
                     if (name_errors.includes(name)) {
                         if (current_error.length > 0) {
@@ -142,17 +150,40 @@
                 return span;
             },
             getInputFormsNames() {
-                let inputForms = this.$refs.form.querySelectorAll(this.parentSelector + ' [name]')
+                let inputForms = this.$refs.form.querySelectorAll(this.inputParentSelector + ' [name]')
                 let names = []
                 inputForms.forEach(function (inputForm) {
                     names.push(inputForm.getAttribute('name'));
                 });
                 return names
+            },
+            setButtonLoading() {
+                let button = this.submitButton;
+                if (button != null) {
+                    if (this.spinner) {
+                        const loading = new (Vue.extend(LoadingSpinner))();
+                        loading.$mount();
+                        button.appendChild(loading.$el);
+                    }
+                    button.disabled = true;
+                }
+            },
+            unsetButtonLoading() {
+                let button = this.submitButton;
+                if (button != null) {
+                    if (this.spinner)
+                        button.lastChild.remove();
+                    button.disabled = false;
+                }
             }
         },
         computed: {
-            parentSelector: function () {
-                return (typeof this.inputParentSelector !== "undefined") ? this.inputParentSelector : '.form-group';
+            id() {
+                return this.$refs.form.id;
+            },
+            submitButton() {
+                const button = this.$refs.form.querySelector('[type="submit"]');
+                return button != null ? button : document.querySelector(`button[form="${this.id}"]`);
             }
         }
     }
