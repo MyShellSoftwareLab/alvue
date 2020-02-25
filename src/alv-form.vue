@@ -2,7 +2,6 @@
     <form v-bind:action="action" :method="method" @submit.prevent="sendFormData" ref="form">
         <input type="hidden" name="_method" :value="method">
         <slot></slot>
-
     </form>
 </template>
 
