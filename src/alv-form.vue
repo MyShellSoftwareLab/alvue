@@ -2,6 +2,7 @@
     <form v-bind:action="action" :method="method" @submit.prevent="sendFormData" ref="form">
         <input type="hidden" name="_method" :value="method">
         <slot></slot>
+
     </form>
 </template>
 
@@ -29,6 +30,10 @@
             spinner: {
                 type: Boolean,
                 default: false
+            },
+            errorClass: {
+                type: String,
+                default: null
             }
         },
         methods: {
@@ -112,7 +117,15 @@
                 formData.append("_method", this.method);
                 return formData;
             },
-
+            removeErrorInputsEvents() {
+                document.querySelectorAll(`.${this.errorClass} [name]`).forEach(input => {
+                        input.addEventListener('change', () => {
+                            input.closest(this.inputParentSelector).classList.remove(this.errorClass);
+                            input.closest(this.inputParentSelector).querySelector('.alv-error').remove();
+                        })
+                    }
+                )
+            },
             showErrors(form, errors) {
                 let $this = this;
                 let name_errors = Object.keys(errors);
@@ -126,14 +139,16 @@
                         } else {
                             let span = $this.getDefaultSpan();
                             span.textContent = errors[name][0];
-                            formGroup.append(span)
+                            formGroup.append(span);
+                            if ($this.errorClass != null)
+                                formGroup.classList.add($this.errorClass);
                         }
                     } else {
                         if (current_error.length > 0)
                             current_error[0].remove();
                     }
-
-                })
+                });
+                $this.removeErrorInputsEvents();
             },
             dropAllErrors() {
                 let current_errors = document.getElementsByClassName('alv-error');
@@ -184,7 +199,7 @@
                 const button = this.$refs.form.querySelector('[type="submit"]');
                 return button != null ? button : document.querySelector(`button[form="${this.id}"]`);
             }
-        }
+        },
     }
 </script>
 

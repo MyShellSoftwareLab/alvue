@@ -31,13 +31,14 @@ Vue.use(alvue);
 
 ### Properties
 
-| Name                   | Type       |Required | Default     | Description                        |
-| ---                    | ---         | ---    | ---         | ---                                |
-| action                 | String      | true   | undefined   | URL to post.                        |
-| method                 | String      | false  | post        | HTTP method used to send data.      |
-| data-object            | Object      | false  | undefined   | Object to send sent to server <br> If it is not included, form data is sent by input name.     |
-| input-parent-selector  | String      | false  | div         | Parent of input to append error.    |
-| spinner                | Boolean     | false  | false       | Append loading spinner.             |
+| Name                   | Type     | Required | Default     | Description                         |
+| ---                    | ---      |   ---    | ---         | ---                                 |
+| action                 | String   |  true    | undefined   | URL to post.                        |
+| method                 | String   |  false   | post        | HTTP method used to send data.      |
+| data-object            | Object   |  false   | undefined   | Object to send sent to server <br> If it is not included, form data is sent by input name.     |
+| input-parent-selector  | String   |  false   | div         | Parent of input to append error.    |
+| spinner                | Boolean  |  false   | false       | Append loading spinner.             |
+| error-class            | String   |  false   | null        | Parent of input to append error class. |
 
 
 ### Events
