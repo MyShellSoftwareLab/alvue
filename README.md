@@ -39,6 +39,8 @@ Vue.use(alvue);
 | input-parent-selector  | String   |  false   | div         | Parent of input to append error.    |
 | spinner                | Boolean  |  false   | false       | Append loading spinner.             |
 | error-class            | String   |  false   | null        | Parent of input to append error class. |
+| axios-config           | Object   |  false   | {}          | Axios config to create the instance. |
+| html-errors            | Boolean  |  false   | false       | Support for displaying errors with html. |
 
 
 ### Events
