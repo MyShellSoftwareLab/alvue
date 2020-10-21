@@ -7,7 +7,8 @@
 </template>
 
 <script>
-    import LoadingSpinner from './lading-spinner'
+    import LoadingSpinner from "./lading-spinner"
+    import Repository from "./repository";
 
     export default {
         name: "alv-form",
@@ -25,7 +26,7 @@
             dataArray: Object,
             inputParentSelector: {
                 type: String,
-                default: 'div'
+                default: "div"
             },
             spinner: {
                 type: Boolean,
@@ -34,11 +35,20 @@
             errorClass: {
                 type: String,
                 default: null
+            },
+            axiosConfig: {
+                type: Object,
+                default() {
+                    return {}
+                }
+            },
+            htmlErrors: {
+                type: Boolean,
+                default: false
             }
         },
         methods: {
             sendFormData() {
-                let $this = this;
                 let form = this.$refs.form;
                 let formData;
                 if (typeof this.dataObject !== "undefined")
@@ -48,17 +58,23 @@
                 else
                     formData = this.getFormNames(form);
                 this.setButtonLoading();
-                axios.post(this.action, formData)
-                    .then(response => {
-                        $this.$emit('after-done', response);
-                        if ($this.resetOnDone)
-                            form.reset();
-                        $this.dropAllErrors();
-                    }).catch(exception => {
-                    this.unsetButtonLoading()
-                    let errors = exception.response.data.errors;
-                    $this.showErrors(form, errors);
-                    $this.$emit('after-error', exception.response.data);
+                axios({
+                    method: this.method,
+                    url: this.action,
+                    data: formData,
+                    ...this.axiosConfig
+                }).then(response => {
+                    this.$emit("after-done", response);
+                    if (this.resetOnDone)
+                        form.reset();
+                    this.dropAllErrors();
+                }).catch(exception => {
+                    this.$emit("after-error", exception.response.data);
+                    Repository.responseToJSON(exception.response.data).then(response => {
+                        this.unsetButtonLoading()
+                        let errors = response.errors;
+                        this.showErrors(form, errors);
+                    });
                 });
             },
             getFormNames(form) {
@@ -74,13 +90,11 @@
                 let form = this.dataObject;
                 var formData = this.createFormData();
                 Object.keys(form).forEach(key => {
-                    formData = this.append(formData, form, '', key)
+                    formData = this.append(formData, form, "", key)
                 });
-
                 return formData;
             },
             append(formData, form, name, key) {
-
                 if (form[key] instanceof Date) {
                     formData.append(name ? name : key, form[key].toISOString());
                     return formData;
@@ -119,55 +133,56 @@
             },
             removeErrorInputsEvents() {
                 document.querySelectorAll(`.${this.errorClass} [name]`).forEach(input => {
-                        input.addEventListener('change', () => {
+                        input.addEventListener("change", () => {
                             input.closest(this.inputParentSelector).classList.remove(this.errorClass);
-                            input.closest(this.inputParentSelector).querySelector('.alv-error').remove();
-                        })
+                            input.closest(this.inputParentSelector).querySelector(".alv-error").remove();
+                        });
                     }
                 )
             },
             showErrors(form, errors) {
-                let $this = this;
                 let name_errors = Object.keys(errors);
-                this.getInputFormsNames().forEach(function (name) {
+                this.getInputFormsNames().forEach(name => {
                     let selector = "[name='" + name + "']";
-                    let formGroup = form.querySelector(selector).closest($this.inputParentSelector);
-                    let current_error = formGroup.getElementsByClassName('alv-error');
+                    let formGroup = form.querySelector(selector).closest(this.inputParentSelector);
+                    let current_error = formGroup.getElementsByClassName("alv-error");
                     if (name_errors.includes(name)) {
                         if (current_error.length > 0) {
-                            current_error[0].textContent = errors[name][0];
+                            current_error[0][this.htmlErrors ? "innerHTML" : "textContent"] = errors[name][0];
                         } else {
-                            let span = $this.getDefaultSpan();
-                            span.textContent = errors[name][0];
+                            let span = this.getDefaultSpan();
+                            span[this.htmlErrors ? "innerHTML" : "textContent"] = errors[name][0];
                             formGroup.append(span);
-                            if ($this.errorClass != null)
-                                formGroup.classList.add($this.errorClass);
+                            if (this.errorClass != null) {
+                                formGroup.classList.add(this.errorClass);
+                            }
                         }
                     } else {
-                        if (current_error.length > 0)
+                        if (current_error.length > 0) {
                             current_error[0].remove();
+                        }
                     }
                 });
-                $this.removeErrorInputsEvents();
+                this.removeErrorInputsEvents();
             },
             dropAllErrors() {
-                let current_errors = document.getElementsByClassName('alv-error');
+                let current_errors = document.getElementsByClassName("alv-error");
                 while (current_errors[0]) {
                     current_errors[0].parentNode.removeChild(current_errors[0]);
                 }
             },
             getDefaultSpan() {
-                let span = document.createElement('span');
-                span.classList.add('alv-error');
-                span.style.fontSize = '70%';
-                span.style.color = 'crimson';
+                let span = document.createElement("span");
+                span.classList.add("alv-error");
+                span.style.fontSize = "70%";
+                span.style.color = "crimson";
                 return span;
             },
             getInputFormsNames() {
-                let inputForms = this.$refs.form.querySelectorAll(this.inputParentSelector + ' [name]')
+                let inputForms = this.$refs.form.querySelectorAll(this.inputParentSelector + " [name]")
                 let names = []
                 inputForms.forEach(function (inputForm) {
-                    names.push(inputForm.getAttribute('name'));
+                    names.push(inputForm.getAttribute("name"));
                 });
                 return names
             },
@@ -185,8 +200,9 @@
             unsetButtonLoading() {
                 let button = this.submitButton;
                 if (button != null) {
-                    if (this.spinner)
+                    if (this.spinner) {
                         button.lastChild.remove();
+                    }
                     button.disabled = false;
                 }
             }
@@ -196,7 +212,7 @@
                 return this.$refs.form.id;
             },
             submitButton() {
-                const button = this.$refs.form.querySelector('[type="submit"]');
+                const button = this.$refs.form.querySelector("[type='submit']");
                 return button != null ? button : document.querySelector(`button[form="${this.id}"]`);
             }
         },
