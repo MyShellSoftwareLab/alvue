@@ -12,9 +12,6 @@
 
     export default {
         name: "alv-form",
-        components: {
-            LoadingSpinner
-        },
         props: {
             action: String,
             method: {
@@ -45,6 +42,10 @@
             htmlErrors: {
                 type: Boolean,
                 default: false
+            },
+            focusableErrors: {
+                type: Boolean,
+                default: true
             }
         },
         methods: {
@@ -58,7 +59,7 @@
                 else
                     formData = this.getFormNames(form);
                 this.setButtonLoading();
-                axios({
+                window.axios({
                     method: this.method,
                     url: this.action,
                     data: formData,
@@ -71,9 +72,12 @@
                 }).catch(exception => {
                     this.$emit("after-error", exception.response.data);
                     Repository.responseToJSON(exception.response.data).then(response => {
-                        this.unsetButtonLoading()
+                        this.unsetButtonLoading();
                         let errors = response.errors;
-                        this.showErrors(form, errors);
+                        if (typeof errors == "object") {
+                            this.showErrors(form, errors);
+                            this.focusError();
+                        }
                     });
                 });
             },
@@ -190,7 +194,7 @@
                 let button = this.submitButton;
                 if (button != null) {
                     if (this.spinner) {
-                        const loading = new (Vue.extend(LoadingSpinner))();
+                        const loading = new (window.Vue.extend(LoadingSpinner))();
                         loading.$mount();
                         button.appendChild(loading.$el);
                     }
@@ -204,6 +208,12 @@
                         button.lastChild.remove();
                     }
                     button.disabled = false;
+                }
+            },
+            focusError() {
+                let firstInputError = document.querySelector(".alv-error");
+                if (firstInputError) {
+                    firstInputError.closest(this.inputParentSelector).querySelector("input,select").focus();
                 }
             }
         },
