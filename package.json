@@ -1,6 +1,6 @@
 {
   "name": "@myshell/alvue",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "main": "src/alv.js",
   "browser": {
     "./sfc": "src/alv-form.vue"
@@ -25,7 +25,8 @@
     "vue",
     "vuejs"
   ],
-  "dependencies": {
+  "devDependencies": {
+    "vue": "^2.6.12",
     "axios": "^0.16.2"
   }
 }
