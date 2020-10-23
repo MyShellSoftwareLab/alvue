@@ -1,11 +1,11 @@
 {
   "name": "@myshell/alvue",
-  "version": "0.1.1",
+  "version": "0.3.3",
   "main": "src/alv.js",
   "browser": {
     "./sfc": "src/alv-form.vue"
   },
-  "description": "Ajax Laravel Validator",
+  "description": "Ajax Laravel Validator helps you show the errors of a Laravel FormRequest in its forms.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,5 +18,15 @@
   "bugs": {
     "url": "https://github.com/MyShellSoftwareLab/alvue/issues"
   },
-  "homepage": "https://github.com/MyShellSoftwareLab/alvue#readme"
+  "homepage": "https://github.com/MyShellSoftwareLab/alvue#readme",
+  "keywords": [
+    "plugin",
+    "laravel",
+    "vue",
+    "vuejs"
+  ],
+  "devDependencies": {
+    "vue": "^2.6.12",
+    "axios": "^0.16.2"
+  }
 }
