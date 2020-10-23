@@ -59,8 +59,9 @@
                 else
                     formData = this.getFormNames(form);
                 this.setButtonLoading();
+
                 window.axios({
-                    method: this.method,
+                    method: this.method.toLowerCase() == "get" ? "GET" : "POST",
                     url: this.action,
                     data: formData,
                     ...this.axiosConfig
