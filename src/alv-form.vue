@@ -77,7 +77,9 @@
                         let errors = response.errors;
                         if (typeof errors == "object") {
                             this.showErrors(form, errors);
-                            this.focusError();
+                            if (this.focusableErrors) {
+                                this.focusError();
+                            }
                         }
                     });
                 });
@@ -189,7 +191,7 @@
                 inputForms.forEach(function (inputForm) {
                     names.push(inputForm.getAttribute("name"));
                 });
-                return names
+                return names;
             },
             setButtonLoading() {
                 let button = this.submitButton;
@@ -214,7 +216,8 @@
             focusError() {
                 let firstInputError = document.querySelector(".alv-error");
                 if (firstInputError) {
-                    firstInputError.closest(this.inputParentSelector).querySelector("input,select").focus();
+                    firstInputError = firstInputError.closest(this.inputParentSelector).querySelector("input,select,textarea");
+                    firstInputError && firstInputError.focus();
                 }
             }
         },
