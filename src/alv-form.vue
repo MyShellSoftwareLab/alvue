@@ -114,6 +114,9 @@
                             formData.append(name ? `${name}[]` : key, form[key][i]);
                         return formData;
                     }
+                } else if (form[key] instanceof File) {
+                    formData.append(name ? name : key, form[key]);
+                    return formData;
                 } else if (form[key] && typeof form[key] == "object") {
                     if (Array.isArray(form[key])) {
                         form[key].forEach((item, index) => {
