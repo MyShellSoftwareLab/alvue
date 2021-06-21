@@ -1,4 +1,4 @@
-import AlvForm from './alv-form';
+import AlvForm from './alv-form.vue';
 
 export default {
     install(Vue) {
