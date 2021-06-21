@@ -1,6 +1,6 @@
 {
   "name": "@myshell/alvue",
-  "version": "0.3.4",
+  "version": "1.0.0",
   "main": "src/alv.js",
   "browser": {
     "./sfc": "src/alv-form.vue"
