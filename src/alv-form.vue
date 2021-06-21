@@ -114,6 +114,9 @@
                             formData.append(name ? `${name}[]` : key, form[key][i]);
                         return formData;
                     }
+                } else if (form[key] instanceof File) {
+                    formData.append(name ? name : key, form[key]);
+                    return formData;
                 } else if (form[key] && typeof form[key] == "object") {
                     if (Array.isArray(form[key])) {
                         form[key].forEach((item, index) => {
@@ -149,7 +152,7 @@
             },
             showErrors(form, errors) {
                 let name_errors = Object.keys(errors);
-                this.getInputFormsNames().forEach(name => {
+                this.getInputFormsNames(form).forEach(name => {
                     let selector = "[name='" + name + "']";
                     let formGroup = form.querySelector(selector).closest(this.inputParentSelector);
                     let current_error = formGroup.getElementsByClassName("alv-error");
@@ -185,8 +188,8 @@
                 span.style.color = "crimson";
                 return span;
             },
-            getInputFormsNames() {
-                let inputForms = this.$refs.form.querySelectorAll(this.inputParentSelector + " [name]")
+            getInputFormsNames(form) {
+                let inputForms = form.querySelectorAll(this.inputParentSelector + " [name]")
                 let names = []
                 inputForms.forEach(function (inputForm) {
                     names.push(inputForm.getAttribute("name"));
