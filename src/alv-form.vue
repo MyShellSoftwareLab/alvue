@@ -157,7 +157,7 @@ export default {
         },
         showErrors(form, errors) {
             let name_errors = Object.keys(errors);
-            this.getInputFormsNames().forEach(name => {
+            this.getInputFormsNames(form).forEach(name => {
                 let selector = "[name='" + name + "']";
                 let formGroup = form.querySelector(selector).closest(this.inputParentSelector);
                 let current_error = formGroup.getElementsByClassName("alv-error");
@@ -193,8 +193,8 @@ export default {
             span.style.color = "crimson";
             return span;
         },
-        getInputFormsNames() {
-            let inputForms = this.$refs.form.querySelectorAll(this.inputParentSelector + " [name]")
+        getInputFormsNames(form) {
+            let inputForms = form.querySelectorAll(this.inputParentSelector + " [name]")
             let names = []
             inputForms.forEach(function (inputForm) {
                 names.push(inputForm.getAttribute("name"));
