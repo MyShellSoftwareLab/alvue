@@ -50,6 +50,9 @@ export default {
     },
     methods: {
         sendFormData() {
+            this.$emit('before-submit');
+            if(typeof this.options['before-submit'] != "undefined")
+                this.options['before-submit']();
             let form = this.$refs.form;
             let formData;
             if (typeof this.dataObject !== "undefined")
@@ -72,11 +75,16 @@ export default {
             }
             window.axios(axiosOptions).then(response => {
                 this.$emit("after-done", response);
+                if(typeof this.options['after-done'] != "undefined")
+                    this.options['after-done']();
                 if (this.resetOnDone)
                     form.reset();
                 this.dropAllErrors();
             }).catch(exception => {
                 this.$emit("after-error", exception.response.data);
+                if(typeof this.options['after-error'] != "undefined")
+                    this.options['after-error']();
+
                 Repository.responseToJSON(exception.response.data).then(response => {
                     this.unsetButtonLoading();
                     let errors = response.errors;
