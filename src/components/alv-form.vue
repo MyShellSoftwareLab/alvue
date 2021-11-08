@@ -68,7 +68,7 @@ export default {
 
                 window.axios(axiosOptions).then(this.afterDone).catch(exception => this.afterError(exception.response));
             } else {
-                this.action().then(this.afterDone).catch(errors => this.afterError({data: {errors}}));
+                this.action(this.dataObject).then(this.afterDone).catch(errors => this.afterError({data: {errors}}));
             }
         },
         afterDone(response) {
