@@ -81,7 +81,6 @@ export default {
         afterError(response) {
             this.$emit("after-error", response.data);
             this.globalEmit('after-error', response)
-            console.log(response)
             responseToJSON(response.data).then(response => {
                 this.unsetButtonLoading();
                 let errors = response.errors;
