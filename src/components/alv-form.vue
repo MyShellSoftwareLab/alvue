@@ -7,7 +7,7 @@
 
 <script>
 import LoadingSpinner from "./lading-spinner"
-import {responseToJSON, createFormData, showErrors} from "../helpers";
+import {responseToJSON, createFormData, showErrors, isUrl} from "../helpers";
 
 export default {
     name: "alv-form",
@@ -52,7 +52,7 @@ export default {
             this.$emit('before-submit');
             this.globalEmit('before-submit')
             this.setButtonLoading();
-            if (typeof this.action === "string") {
+            if (isUrl(this.action)) {
                 let formData;
                 if (typeof this.dataObject !== "undefined")
                     formData = createFormData(this.dataObject, this.method);
