@@ -7,7 +7,7 @@
 
 <script>
 import LoadingSpinner from "./lading-spinner"
-import {responseToJSON, createFormData, showErrors} from "../helpers";
+import {responseToJSON, createFormData, showErrors, isUrl} from "../helpers";
 
 export default {
     name: "alv-form",
@@ -52,7 +52,7 @@ export default {
             this.$emit('before-submit');
             this.globalEmit('before-submit')
             this.setButtonLoading();
-            if (typeof this.action === "string") {
+            if (isUrl(this.action)) {
                 let formData;
                 if (typeof this.dataObject !== "undefined")
                     formData = createFormData(this.dataObject, this.method);
@@ -68,7 +68,7 @@ export default {
 
                 window.axios(axiosOptions).then(this.afterDone).catch(exception => this.afterError(exception.response));
             } else {
-                this.action().then(this.afterDone).catch(errors => this.afterError({data: {errors}}));
+                this.action(this.dataObject).then(this.afterDone).catch(errors => this.afterError({data: {errors}}));
             }
         },
         afterDone(response) {
@@ -81,7 +81,6 @@ export default {
         afterError(response) {
             this.$emit("after-error", response.data);
             this.globalEmit('after-error', response)
-            console.log(response)
             responseToJSON(response.data).then(response => {
                 this.unsetButtonLoading();
                 let errors = response.errors;
