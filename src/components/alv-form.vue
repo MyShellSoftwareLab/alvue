@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import LoadingSpinner from "./lading-spinner"
+import LoadingSpinner from "./lading-spinner.vue";
 import {responseToJSON, createFormData, showErrors, isUrl} from "../helpers";
 
 export default {
