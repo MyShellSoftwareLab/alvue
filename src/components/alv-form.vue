@@ -78,21 +78,26 @@ export default {
                 this.$refs.form.reset();
             this.dropAllErrors();
         },
-        afterError(response) {
-            this.$emit("after-error", response.data);
-            this.globalEmit('after-error', response)
-            responseToJSON(response.data).then(response => {
-                this.unsetButtonLoading();
-                let errors = response.errors;
-                if (typeof errors == "object") {
-                    showErrors(this.$refs.form, errors, {
-                        inputParentSelector: this.inputParentSelector,
-                        htmlErrors: this.htmlErrors,
-                        errorClass: this.errorClass,
-                        focusableErrors: this.focusableErrors
-                    });
-                }
-            });
+        afterError(exception) {
+            if (typeof exception.response != 'undefined') {
+                const response = exception.response;
+                this.$emit("after-error", response.data);
+                this.globalEmit('after-error', response)
+                responseToJSON(response.data).then(response => {
+                    this.unsetButtonLoading();
+                    let errors = response.errors;
+                    if (typeof errors == "object") {
+                        showErrors(this.$refs.form, errors, {
+                            inputParentSelector: this.inputParentSelector,
+                            htmlErrors: this.htmlErrors,
+                            errorClass: this.errorClass,
+                            focusableErrors: this.focusableErrors
+                        });
+                    }
+                });
+            } else {
+                console.error(exception);
+            }
         },
         dropAllErrors() {
             let current_errors = document.getElementsByClassName("alv-error");
