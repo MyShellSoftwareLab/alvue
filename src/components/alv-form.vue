@@ -120,7 +120,8 @@ export default {
             if (button != null) {
                 if (this.spinner) {
                     const loadingApp = createApp(LoadingSpinner);
-                    const loading = document.createElement("div")
+                    const loading = document.createElement("span")
+                    loading.style.marginLeft = '15px'
                     loadingApp.mount(loading);
                     button.appendChild(loading);
                 }
