@@ -1,7 +1,9 @@
-import AlvForm from './alv-form.vue';
+import AlvForm from './components/alv-form.vue'
 
 export default {
-    install(Vue) {
-        Vue.component('alv-form', AlvForm);
+    install(Vue, options) {
+        const AlvFormComponent = AlvForm;
+        AlvFormComponent.computed = Object.assign({options: () => typeof options != "undefined" ? options : {}}, AlvFormComponent.computed)
+        Vue.component("alv-form", AlvFormComponent);
     }
 };
