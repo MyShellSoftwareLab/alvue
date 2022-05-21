@@ -66,9 +66,9 @@ export default {
                 }
                 axiosOptions[this.method.toLowerCase() === "get" ? "params" : "data"] = formData;
 
-                window.axios(axiosOptions).then(this.afterDone).catch(exception => this.afterError(exception.response));
+                window.axios(axiosOptions).then(this.afterDone).catch(this.afterError);
             } else {
-                this.action(this.dataObject).then(this.afterDone).catch(errors => this.afterError({data: {errors}}));
+                this.action(this.dataObject).then(this.afterDone).catch(errors => this.afterError({response: {data: {errors}}}));
             }
         },
         afterDone(response) {
