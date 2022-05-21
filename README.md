@@ -1,8 +1,14 @@
 <h2 align="center">ALVue - Ajax Laravel Validator for Vue</h2>
-    
-ALVue is the update of the library that previously worked with JQuery, 
+
+ALVue is the update of the library that previously worked with JQuery,
 this new version includes a Vue component that will help you show the errors of a Laravel FormRequest in its forms.
 
+#### Version matrix
+
+| Vue.js version | Package version   | Branch   |
+| :---           | :---:             | ---:     | 
+| 2.x            | 1.2.x             | `vue2` |
+| 3.x            | 1.3.x             | `master` |
 
 #### Installation
 
@@ -41,6 +47,7 @@ Vue.use(alvue);
 | error-class            | String   |  false   | null        | Parent of input to append error class. |
 | axios-config           | Object   |  false   | {}          | Axios config to create the instance. |
 | html-errors            | Boolean  |  false   | false       | Support for displaying errors with html. |
+| enable-button-on-done  | Boolean  |  false   | false       | Remove disabled property of submit button after success response. |
 
 
 ### Events

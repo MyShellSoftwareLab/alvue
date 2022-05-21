@@ -8,6 +8,7 @@
 <script>
 import LoadingSpinner from "./lading-spinner.vue";
 import {responseToJSON, createFormData, showErrors, isUrl} from "../helpers";
+import {createApp} from "vue";
 
 export default {
     name: "alv-form",
@@ -45,6 +46,10 @@ export default {
         focusableErrors: {
             type: Boolean,
             default: true
+        },
+        enableButtonOnDone: {
+            type: Boolean,
+            default: false
         }
     },
     methods: {
@@ -74,17 +79,22 @@ export default {
         afterDone(response) {
             this.$emit("after-done", response);
             this.globalEmit('after-done', response)
+
             if (this.resetOnDone)
                 this.$refs.form.reset();
+
+            if (this.enableButtonOnDone)
+                this.unsetButtonLoading();
+
             this.dropAllErrors();
         },
         afterError(exception) {
+            this.unsetButtonLoading();
             if (typeof exception.response != 'undefined') {
                 const response = exception.response;
                 this.$emit("after-error", response.data);
                 this.globalEmit('after-error', response)
                 responseToJSON(response.data).then(response => {
-                    this.unsetButtonLoading();
                     let errors = response.errors;
                     if (typeof errors == "object") {
                         showErrors(this.$refs.form, errors, {
@@ -109,9 +119,10 @@ export default {
             let button = this.submitButton;
             if (button != null) {
                 if (this.spinner) {
-                    const loading = new (this.constructor.extend(LoadingSpinner))();
-                    loading.$mount();
-                    button.appendChild(loading.$el);
+                    const loadingApp = createApp(LoadingSpinner);
+                    const loading = document.createElement("div")
+                    loadingApp.mount(loading);
+                    button.appendChild(loading);
                 }
                 button.disabled = true;
             }
