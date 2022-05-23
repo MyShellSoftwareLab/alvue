@@ -122,6 +122,7 @@ export default {
                     const loadingApp = createApp(LoadingSpinner);
                     const loading = document.createElement("span")
                     loading.style.marginLeft = '15px'
+                    loading.id = 'alv-loading-spinner'
                     loadingApp.mount(loading);
                     button.appendChild(loading);
                 }
@@ -131,8 +132,9 @@ export default {
         unsetButtonLoading() {
             let button = this.submitButton;
             if (button != null) {
-                if (this.spinner) {
-                    button.lastChild.remove();
+                let loadingSpinner = button.querySelector('#alv-loading-spinner');
+                if (this.spinner && loadingSpinner) {
+                    loadingSpinner.remove();
                 }
                 button.disabled = false;
             }
