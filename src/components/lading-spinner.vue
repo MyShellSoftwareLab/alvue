@@ -11,7 +11,7 @@ export default {
 
 <style scoped>
 .__alv-spinner {
-    margin-left: .25rem;
+    margin: 0 0 0.207rem;
     display: inline-block;
     width: 1rem;
     height: 1rem;
