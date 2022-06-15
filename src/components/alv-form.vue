@@ -7,51 +7,13 @@
 
 <script>
 import LoadingSpinner from "./lading-spinner.vue";
-import {responseToJSON, createFormData, showErrors, isUrl} from "../helpers";
+import {responseToJSON, createFormData, showErrors, isUrl, validateRules} from "../helpers";
 import {createApp} from "vue";
+import props from "../options/props"
 
 export default {
     name: "alv-form",
-    props: {
-        action: [String, Function],
-        method: {
-            type: String,
-            default: "post"
-        },
-        resetOnDone: Boolean,
-        dataObject: Object,
-        dataArray: Object,
-        inputParentSelector: {
-            type: String,
-            default: "div"
-        },
-        spinner: {
-            type: Boolean,
-            default: false
-        },
-        errorClass: {
-            type: String,
-            default: null
-        },
-        axiosConfig: {
-            type: Object,
-            default() {
-                return {}
-            }
-        },
-        htmlErrors: {
-            type: Boolean,
-            default: false
-        },
-        focusableErrors: {
-            type: Boolean,
-            default: true
-        },
-        enableButtonOnDone: {
-            type: Boolean,
-            default: false
-        }
-    },
+    props,
     methods: {
         sendFormData() {
             this.$emit('before-submit');
@@ -59,9 +21,13 @@ export default {
             this.setButtonLoading();
             if (isUrl(this.action)) {
                 let formData;
-                if (typeof this.dataObject !== "undefined")
+                if (typeof this.dataObject !== "undefined") {
+                    const rulesErrors = validateRules(this.rules, this.dataObject);
+                    if (Object.keys(rulesErrors).length > 0) {
+                        return this.afterError({response: {data: {errors: rulesErrors}}});
+                    }
                     formData = createFormData(this.dataObject, this.method);
-                else
+                } else
                     formData = new FormData(this.$refs.form);
 
                 const axiosOptions = {
