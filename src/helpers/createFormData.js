@@ -11,7 +11,7 @@ export default function createFormData(dataObject, method) {
 
 function append(formData, form, name, key) {
     if (form[key] instanceof Date) {
-        formData.append(name ? name : key, form[key].toISOString());
+        formData.append(name ? name : key, form[key].toLocaleString("sv"));
         return formData;
     } else if (form[key] instanceof FileList) {
         if (key.slice(-2) !== "[]") {
