@@ -82,7 +82,7 @@ export default {
             }
         },
         setButtonLoading() {
-            let button = this.submitButton;
+            let button = this.submitButton();
             if (button != null) {
                 if (this.spinner) {
                     const loadingApp = createApp(LoadingSpinner);
@@ -96,7 +96,7 @@ export default {
             }
         },
         unsetButtonLoading() {
-            let button = this.submitButton;
+            let button = this.submitButton();
             if (button != null) {
                 let loadingSpinner = button.querySelector('#alv-loading-spinner');
                 if (this.spinner && loadingSpinner) {
@@ -108,16 +108,14 @@ export default {
         globalEmit(event, payload) {
             if (typeof this.options != "undefined" && typeof this.options[event] != "undefined")
                 this.options['after-error'](payload);
-        }
-    },
-    computed: {
-        id() {
-            return this.$refs.form.id;
         },
         submitButton() {
             const button = this.$refs.form.querySelector("[type='submit']");
-            return button != null ? button : document.querySelector(`button[form="${this.id}"]`);
+            return button != null ? button : document.querySelector(`button[form="${this.formId()}"]`);
+        },
+        formId() {
+            return this.$refs.form.id;
         }
-    },
+    }
 }
 </script>
