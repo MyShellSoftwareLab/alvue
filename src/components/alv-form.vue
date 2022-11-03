@@ -58,7 +58,7 @@ export default {
             this.unsetButtonLoading();
             if (typeof exception.response != 'undefined') {
                 const response = exception.response;
-                this.$emit("after-error", response.data);
+                this.$emit("after-error", response.data, response.status);
                 this.globalEmit('after-error', response)
                 responseToJSON(response.data).then(response => {
                     let errors = response.errors;
