@@ -91,9 +91,9 @@ export default {
             this.unsetButtonLoading();
             if (typeof exception.response != 'undefined') {
                 const response = exception.response;
-                this.$emit("after-error", response.data);
-                this.globalEmit('after-error', response)
                 responseToJSON(response.data).then(response => {
+                    this.$emit("after-error", response.data);
+                    this.globalEmit('after-error', response);
                     let errors = response.errors;
                     if (typeof errors == "object") {
                         showErrors(this.$refs.form, errors, {
