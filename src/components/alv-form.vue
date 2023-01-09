@@ -68,7 +68,11 @@ export default {
                     url: this.action,
                     ...this.axiosConfig
                 }
-                axiosOptions[this.method.toLowerCase() === "get" ? "params" : "data"] = formData;
+                if(this.method.toLowerCase() === "get")
+                    axiosOptions.params = this.dataObject;
+                else
+                    axiosOptions.data = formData;
+
 
                 window.axios(axiosOptions).then(this.afterDone).catch(this.afterError);
             } else {
