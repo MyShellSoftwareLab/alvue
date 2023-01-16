@@ -1,5 +1,5 @@
 const defaultOptions = {
-    inputParentSelector: ".div",
+    inputParentSelector: "div",
     htmlErrors: false,
     errorClass: "",
     focusableErrors: true,
