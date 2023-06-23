@@ -52,6 +52,14 @@ export default {
         }
     },
     methods: {
+        showErrors(form, errors){
+            showErrors(form, errors, {
+                inputParentSelector: this.inputParentSelector,
+                htmlErrors: this.htmlErrors,
+                errorClass: this.errorClass,
+                focusableErrors: this.focusableErrors
+            });
+        },
         sendFormData() {
             this.$emit('before-submit');
             this.globalEmit('before-submit')
@@ -100,12 +108,7 @@ export default {
                     this.globalEmit('after-error', response);
                     let errors = response.errors;
                     if (typeof errors == "object") {
-                        showErrors(this.$refs.form, errors, {
-                            inputParentSelector: this.inputParentSelector,
-                            htmlErrors: this.htmlErrors,
-                            errorClass: this.errorClass,
-                            focusableErrors: this.focusableErrors
-                        });
+                        this.showErrors(this.$refs.form, errors);
                     }
                 });
             } else {
@@ -124,6 +127,7 @@ export default {
                 if (this.spinner) {
                     const loading = new (this.constructor.extend(LoadingSpinner))();
                     loading.$mount();
+                    loading.$el.id = 'alv-loading-spinner';
                     button.appendChild(loading.$el);
                 }
                 button.disabled = true;
@@ -132,8 +136,9 @@ export default {
         unsetButtonLoading() {
             let button = this.submitButton;
             if (button != null) {
-                if (this.spinner) {
-                    button.lastChild.remove();
+                let loadingSpinner = button.querySelector('#alv-loading-spinner');
+                if (this.spinner && loadingSpinner) {
+                    loadingSpinner.remove();
                 }
                 button.disabled = false;
             }
