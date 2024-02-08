@@ -7,8 +7,8 @@
 
 <script>
 import LoadingSpinner from "./lading-spinner.vue";
-import {responseToJSON, createFormData, showErrors, isUrl, validateRules} from "../helpers";
-import {createApp} from "vue";
+import { responseToJSON, createFormData, showErrors, isUrl, validateRules } from "../helpers";
+import { createApp } from "vue";
 import props from "../options/props"
 
 export default {
@@ -24,7 +24,7 @@ export default {
                 if (typeof this.dataObject !== "undefined") {
                     const rulesErrors = validateRules(this.rules, this.dataObject);
                     if (Object.keys(rulesErrors).length > 0) {
-                        return this.afterError({response: {data: {errors: rulesErrors}}});
+                        return this.afterError({ response: { data: { errors: rulesErrors } } });
                     }
                     formData = createFormData(this.dataObject, this.method);
                 } else
@@ -39,7 +39,13 @@ export default {
 
                 window.axios(axiosOptions).then(this.afterDone).catch(this.afterError);
             } else {
-                this.action(this.dataObject).then(this.afterDone).catch(errors => this.afterError({response: {data: {errors}}}));
+                this.action(this.dataObject).then(this.afterDone).catch(errors => {
+                    if (typeof errors.message != "undefined") {
+                        this.afterError({ response: { data: errors } })
+                    } else {
+                        this.afterError({ response: { data: { errors } } })
+                    }
+                });
             }
         },
         afterDone(response) {
